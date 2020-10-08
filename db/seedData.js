@@ -1,6 +1,6 @@
 // require in the database adapter functions as you write them (createUser, createActivity...)
 // const { } = require('./');
-const {createUser} = require('./')
+const {createUser, createActivity, createRoutine, getRoutinesWithoutActivities, getAllActivities, addActivityToRoutine} = require('./')
 const client = require('./client');
 
 async function dropTables() {
@@ -20,45 +20,44 @@ async function dropTables() {
   }
 }
 
-async function createTables() {
-  try{
-    console.log("Starting to build tables...");
 
+async function createTables() {
+  console.log("Starting to build tables...");
+  // create all tables, in the correct order
+  try {
     await client.query(`
-    CREATE TABLE users (
-      id SERIAL PRIMARY KEY, 
+    CREATE TABLE users(
+      id SERIAL PRIMARY KEY,
       username VARCHAR(255) UNIQUE NOT NULL,
       password VARCHAR(255) NOT NULL
     );
-    CREATE TABLE activities (
+    CREATE TABLE activities(
       id SERIAL PRIMARY KEY,
       name VARCHAR(255) UNIQUE NOT NULL,
       description TEXT NOT NULL
     );
-    CREATE TABLE routines (
+    CREATE TABLE routines(
       id SERIAL PRIMARY KEY,
-      "creatorId" INTEGER REFERENCES users(id) NOT NULL,
-      "isPublic" BOOLEAN DEFAULT false,
-      name VARCHAR(255) UNIQUE NOT NULL,
-      goal TEXT NOT NULL
+      "creatorId"	INTEGER	REFERENCES users(id),
+      "isPublic"	BOOLEAN	DEFAULT false,
+      name	VARCHAR(255)	UNIQUE NOT NULL,
+      goal	TEXT	NOT NULL
     );
-    CREATE TABLE routine_activities (
+    CREATE TABLE routine_activities(
       id SERIAL PRIMARY KEY,
       "routineId" INTEGER REFERENCES routines(id),
       "activityId" INTEGER REFERENCES activities(id),
-      duration INTEGER, 
-      count INTEGER,
-      UNIQUE("routineId", "activityId")
+      duration	INTEGER,
+      count	INTEGER,
+      UNIQUE ("routineId", "activityId")
     );
-    `);
-
-  } catch(error) {
-    console.error("Error building tables!");
-    throw error;
+  `);
+  console.log('Finished constructing tables!')
+  } catch (error) {
+    console.error('Error unable create Tables')
+    throw error
   }
-  // create all tables, in the correct order
 }
-
 /* 
 
 DO NOT CHANGE ANYTHING BELOW. This is default seed data, and will help you start testing, before getting to the tests. 
