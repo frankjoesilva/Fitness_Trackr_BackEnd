@@ -1,4 +1,8 @@
-const client = require('./client')
+const client = require('./client');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt')
+const { JWT_SECRET } = process.env
+const SALT_COUNT = 10
 
 async function createUser({ 
     username, 
