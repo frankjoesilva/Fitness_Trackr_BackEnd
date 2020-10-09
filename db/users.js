@@ -1,20 +1,19 @@
 const client = require('./client');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt')
-const { JWT_SECRET } = process.env
+const bcrypt = require('bcrypt');
 const SALT_COUNT = 10
 
 async function createUser({ 
-    username, 
-    password
-  }) {
-    try {
+  username, 
+  password
+}) {
+  try {
+    const hashedPassword = await bcrypt.hash(password, SALT_COUNT)
       const { rows: [ user ] } = await client.query(`
-      INSERT INTO Users(username, password) 
+      INSERT INTO users(username, password) 
       VALUES($1, $2) 
       ON CONFLICT (username) DO NOTHING 
       RETURNING *;
-      `, [username, password]);
+      `, [username, hashedPassword]);
       delete user.password
       return user;
     } catch (error) {
@@ -24,16 +23,16 @@ async function createUser({
 
  async function getUser({username, password}){
    try{
-     const {rows:user} = await client.query(`
-     SELECT username, password
-     FROM Users
-     WHERE username=$1
-     AND password=$2;
-     `, [username, password])
-    if( user.password === password && user.username === username){
+     const {rows:[user]} = await client.query(`
+     SELECT *
+     FROM users
+     WHERE username=$1;
+     `, [username])
+    const isAMatch = await bcrypt.compare(password, user.password); 
+    if(isAMatch){
       delete user.password
+      return user
     }
-    return user
    }catch(error){
      throw error
    }
@@ -43,9 +42,9 @@ async function getUserById(userId) {
   try {
     const { rows: [ user ] } = await client.query(`
       SELECT *
-      FROM Users
-      WHERE id=${ userId }
-    `);
+      FROM users
+      WHERE id=$1
+    `, [userId]);
     delete user.password
     return user;
   } catch (error) {
