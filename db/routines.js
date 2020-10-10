@@ -75,6 +75,35 @@ async function updateRoutine({ id, ...fields }) {
     }
   }
 
+  async function getActivitiesByRoutineId() {
+    try {
+        const {rows: activities } = await client.query(`
+        SELECT activities, routine_activities.duration, routine_activities.count
+        FROM activities, routine_activities
+        WHERE routine_activities."activityId" = activities.id
+        `, );
+        return activities
+    } catch (error) {
+        throw error;
+    }
+}
+
+async function getAllRoutines() {
+  try {
+      const { rows: routines } = await client.query(`
+      SELECT users.username AS "creatorName", routines.id, routines."creatorId", routines."isPublic", routines.name, routines.goal, routine_activities.count, routine_activities.duration
+      FROM routines, users, routine_activities
+      WHERE routine_activities."routineId" = routines.id
+      AND routines."creatorId" = users.id;`)
+const addingActivitiesToRoutines = await Promise.all(routines.map(async routine => {
+          routine.activities = await getActivitiesByRoutineId(routine.id);
+          return routine;
+      }))
+      return addingActivitiesToRoutines;
+  } catch (error) {
+      throw error;
+  }
+}
 
 module.exports = {
     client,
@@ -83,4 +112,6 @@ module.exports = {
     getRoutineById,
     updateRoutine,
     destroyRoutine,
+    getAllRoutines,
+
 }
