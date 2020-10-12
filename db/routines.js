@@ -1,5 +1,4 @@
 const client = require('./client');
-const { query } = require('./client');
 
 async function createRoutine({ creatorId, isPublic, name, goal }) {
     try {
