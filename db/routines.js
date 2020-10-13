@@ -128,7 +128,7 @@ async function getAllPublicRoutines() {
   async function getAllRoutinesByUser({ username }) {
     try {
         const { rows: routines } = await client.query (`
-        SELECT users.username AS "creatorName", routines.id, routines."creatorId", routines."isPublic", routines.name, routines.goal
+        SELECT users.username AS "creatorName", routines.*
         FROM users, routines, routine_activities
         WHERE routine_activities."routineId" = routines.id
         AND routines."creatorId" = users.id
@@ -168,7 +168,7 @@ async function getPublicRoutinesByUser({ username }) {
 async function getPublicRoutinesByActivity() {
   try {
       const { rows: routines } = await client.query (`
-      SELECT users.username AS "creatorName", routines.id, routines."creatorId", routines."isPublic", routines.name, routines.goal
+      SELECT users.username AS "creatorName", routines.*
       FROM users, routines, routine_activities
       WHERE routine_activities."routineId" = routines.id
       AND routines."creatorId" = users.id

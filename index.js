@@ -25,7 +25,7 @@ server.use((req, res, next) => {
 });
 
 server.use('/api/health', ( req, res ) => {
-    res.send({message: "this server is feeling great today!"})
+    res.send({message: "this server is feeling Good!"})
 });
 
 server.use((error, req, res, next) => {
@@ -33,8 +33,12 @@ server.use((error, req, res, next) => {
 });
 
 server.get('*', (req, res, next) => {
-  res.status(404).send({message : 'Oops!'});
+  res.status(404).send({message : 'uh Oh!'});
 });
+
+server.use((error, req, res, next) => {
+  res.status(500).send(error)
+})
 
 server.listen(PORT, () => {
     client.connect()
