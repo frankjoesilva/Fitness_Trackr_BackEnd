@@ -6,11 +6,11 @@ const express = require('express');
 const apiRouter = express.Router();
 
 
-const usersRouter = require('../api/users');
-apiRouter.use('/users', usersRouter);
+const usersRouter = require('./users');
 
-const activitiesRouter = require('../api/activities')
-apiRouter.use('/activities', activitiesRouter)
+
+const activitiesRouter = require('./activities')
+
 
 
 
@@ -50,7 +50,10 @@ apiRouter.use((req, res, next) => {
     next();
   });
 
-  
+  apiRouter.use('/users', usersRouter);
+
+  apiRouter.use('/activities', activitiesRouter)
+
 
 
 
