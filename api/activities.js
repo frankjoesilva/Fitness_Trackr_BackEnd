@@ -2,7 +2,7 @@ const express = require('express');
 const activitiesRouter = express.Router();
 const { requireUser } = require('./utils')
 const { createActivity, getAllActivities, updateActivity } = require('../db/activities');
-const { getPublicRoutinesByUser, getPublicRoutinesByActivity } = require('../db/routines');
+const { getPublicRoutinesByActivity } = require('../db/routines');
 
 activitiesRouter.get('/', async ( req, res, next ) => {
     try {
