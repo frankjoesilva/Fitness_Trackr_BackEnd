@@ -11,7 +11,7 @@ const usersRouter = require('./users');
 
 const activitiesRouter = require('./activities')
 
-
+const routinesRouter = require('./routines')
 
 
   apiRouter.use(async (req, res, next) => {
@@ -55,6 +55,7 @@ const activitiesRouter = require('./activities')
 
   apiRouter.use('/activities', activitiesRouter)
 
+  apiRouter.use('/routines', routinesRouter)
 
 
 
