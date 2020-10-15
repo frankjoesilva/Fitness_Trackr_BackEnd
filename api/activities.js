@@ -1,7 +1,7 @@
 const express = require('express');
 const activitiesRouter = express.Router();
 const { requireUser } = require('./utils')
-const { createActivity, getAllActivities } = require('../db/activities')
+const { createActivity, getAllActivities, updateActivity } = require('../db/activities')
 
 activitiesRouter.get('/', async ( req, res, next ) => {
     try {
@@ -14,7 +14,7 @@ activitiesRouter.get('/', async ( req, res, next ) => {
 })
 
 
-activitiesRouter.post('/', requireUser, async ( req, res, next ) => {
+    activitiesRouter.post('/', requireUser, async ( req, res, next ) => {
         const { name, description } = req.body;
         try {
             
@@ -27,5 +27,16 @@ activitiesRouter.post('/', requireUser, async ( req, res, next ) => {
             next(error)
         }
     }); 
+
+    activitiesRouter.patch('/:activityId', requireUser, async ( req, res, next ) => {
+        const { activityId } = req.params
+        const { name, description } = req.body;
+        try {
+            const updatedActivity = await updateActivity({ id : activityId, name, description })
+            res.send( updatedActivity )
+        } catch (error) {
+          next(error)
+        }
+    });
 
     module.exports = activitiesRouter

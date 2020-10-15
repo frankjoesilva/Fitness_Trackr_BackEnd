@@ -4,6 +4,7 @@ const{ JWT_SECRET } = process.env
 const usersRouter = express.Router();
 const { requireUser } = require('./utils')
 const { createUser, getUserByUsername, getUser } = require('../db/users');
+const { getPublicRoutinesByUser } = require('../db/routines')
 
 
 
@@ -43,6 +44,18 @@ usersRouter.post('/login', async (req, res, next) => {
   }
 });
 
+usersRouter.get('/:username/routines', async (req, res, next) => {
+  const { username } = req.params;
+  const getUsername = await getPublicRoutinesByUser({username})
+try {
+    getUsername.filter(routines => {
+      return routines.username
+    })
+    res.send(getUsername)
+} catch ({ name, message }) {
+  next(error)
+}
+});
 
 usersRouter.get('/me', requireUser, async (req, res, next) => {
   console.log('user', req.user)

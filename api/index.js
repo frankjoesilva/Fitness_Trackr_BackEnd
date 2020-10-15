@@ -14,7 +14,7 @@ const activitiesRouter = require('./activities')
 
 
 
-apiRouter.use(async (req, res, next) => {
+  apiRouter.use(async (req, res, next) => {
     console.log('req', req.body)
   const prefix = 'Bearer ';
   const auth = req.header('Authorization');
@@ -43,13 +43,14 @@ apiRouter.use(async (req, res, next) => {
 });
 
 
-apiRouter.use((req, res, next) => {
+  apiRouter.use((req, res, next) => {
     if (req.user) {
       console.log("User is set:", req.user);
     }
     next();
   });
 
+  
   apiRouter.use('/users', usersRouter);
 
   apiRouter.use('/activities', activitiesRouter)
