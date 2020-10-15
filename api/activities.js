@@ -14,13 +14,14 @@ activitiesRouter.get('/', async ( req, res, next ) => {
 })
 
 
-activitiesRouter.post('/activities', requireUser, async ( req, res, next ) => {
+activitiesRouter.post('/', requireUser, async ( req, res, next ) => {
+        const { name, description } = req.body;
         try {
-            const createdActivities = await createActivity({ name, description })
+            
+            const createdActivities = await createActivity({name, description})
             if(createdActivities){
-                res.send({ activity });
+                res.send(createdActivities);
                 next() 
-            return createdActivities
             }
         } catch (error){
             next(error)
