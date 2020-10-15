@@ -24,6 +24,9 @@ server.use((req, res, next) => {
   next();
 });
 
+server.get('/api/health', ( req, res ) => {
+    res.send({message: "this server is chillin!"})
+});
 
 server.use((error, req, res, next) => {
   res.send(error);
@@ -36,10 +39,6 @@ server.get('*', (req, res, next) => {
 server.use((error, req, res, next) => {
   res.status(500).send(error)
 })
-
- server.get('/api/health', ( req, res ) => {
-  res.send({message: "this server is chillin!"})
-  });
 
 server.use((error, req, res, next) => {
   console.log('error', error)
