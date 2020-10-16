@@ -189,6 +189,7 @@ async function getPublicRoutinesByActivity() {
 module.exports = {
     client,
     createRoutine,
+    getActivitiesByRoutineId,
     getRoutinesWithoutActivities,
     getRoutineById,
     updateRoutine,

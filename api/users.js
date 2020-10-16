@@ -48,9 +48,9 @@ usersRouter.get('/:username/routines', async (req, res, next) => {
   const { username } = req.params;
   const getUsername = await getPublicRoutinesByUser({username})
 try {
-    getUsername.filter(routines => {
-      return routines.username
-    })
+    // getUsername.filter(routines => {
+    //   return routines.username
+    // })
     res.send(getUsername)
 } catch ({ name, message }) {
   next(error)
