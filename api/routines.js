@@ -1,7 +1,9 @@
 const express = require('express');
 const routinesRouter = express.Router();
 const { getAllPublicRoutines, createRoutine, updateRoutine, destroyRoutine } = require('../db/routines');
+const {addActivityToRoutine} = require('../db/routine_activities');
 const { requireUser } = require('./utils');
+
 
 
 routinesRouter.get('/', async ( req, res, next ) => {
@@ -24,6 +26,17 @@ routinesRouter.post('/', requireUser, async ( req, res, next ) => {
     }
 });
 
+    routinesRouter.post('/:routineId/activities', async ( req, res, next ) => {
+        const { routineId } = req.params
+        const { activityId, count, duration } = req.body
+        try {
+            const activityToRoutine = await addActivityToRoutine({ routineId, activityId, count, duration })
+            res.send( activityToRoutine )
+        } catch (error) {
+          next(error)
+        }
+    });
+
     routinesRouter.patch('/:routineId', requireUser, async (req, res, next) => {
         const { routineId } = req.params
         try {
@@ -42,6 +55,8 @@ routinesRouter.post('/', requireUser, async ( req, res, next ) => {
         next(error)
         }
     });
+
+
 
 
 
