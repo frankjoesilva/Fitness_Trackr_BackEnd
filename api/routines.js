@@ -1,6 +1,6 @@
 const express = require('express');
 const routinesRouter = express.Router();
-const { getAllPublicRoutines, createRoutine } = require('../db/routines');
+const { getAllPublicRoutines, createRoutine, updateRoutine, destroyRoutine } = require('../db/routines');
 const { requireUser } = require('./utils');
 
 
@@ -8,7 +8,6 @@ routinesRouter.get('/', async ( req, res, next ) => {
     try {
         const routines = await getAllPublicRoutines()
         res.send( routines )
-        return routines
     } catch (error) { 
         next(error)
     }
@@ -24,5 +23,26 @@ routinesRouter.post('/', requireUser, async ( req, res, next ) => {
       next(error)
     }
 });
+
+    routinesRouter.patch('/:routineId', requireUser, async (req, res, next) => {
+        const { routineId } = req.params
+        try {
+            const updatedRoutine = await updateRoutine({id: routineId, ...req.body})
+            res.send(updatedRoutine)
+        }catch(error){
+        next(error)
+        }
+    });
+
+    routinesRouter.delete('/:routineId', requireUser, async (req, res, next) =>{
+        try{
+            const ThrowOutRoutine = await destroyRoutine(req.params.routineId)
+            res.send(ThrowOutRoutine)
+        }catch(error){
+        next(error)
+        }
+    });
+
+
 
 module.exports = routinesRouter

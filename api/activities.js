@@ -43,11 +43,8 @@ activitiesRouter.get('/', async ( req, res, next ) => {
     
 activitiesRouter.get('/:activityId/routines', async ( req, res, next ) => {
     const { activityId } = req.params;
-    const getPublicRoutine = await getPublicRoutinesByActivity({ activityId })
     try {
-        getPublicRoutine.filter(routines => {
-            return routines.activityId
-        })
+        const getPublicRoutine = await getPublicRoutinesByActivity({ activityId })
         res.send(getPublicRoutine)
     } catch ({name, message}) {
       next(error)

@@ -14,7 +14,6 @@ async function createRoutine({ creatorId, isPublic, name, goal }) {
   }
 
   
-
   async function getRoutinesWithoutActivities() {
     try {
         const { rows } = await client.query(`
@@ -65,11 +64,13 @@ async function updateRoutine({ id, ...fields }) {
 
   async function destroyRoutine(id){
     try{
-     await client.query(`
+     const {rows: [ routine ]}= await client.query(`
       DELETE 
       FROM routines
       WHERE id = $1
+      RETURNING *;
       `, [id]);
+      return routine;
     }catch(error){
       throw error
     }
@@ -197,5 +198,6 @@ module.exports = {
     getAllRoutinesByUser,
     getPublicRoutinesByUser,
     getPublicRoutinesByActivity,
+    destroyRoutine,
 
 }
