@@ -15,13 +15,11 @@ routinesRouter.get('/', async ( req, res, next ) => {
 })
 
 routinesRouter.post('/', requireUser, async ( req, res, next ) => {
-    const { creatorId, isPublic, name, goal } = req.body;
-    const createdRoutines = await createRoutine({ creatorId, isPublic, name, goal })
+    const { isPublic, name, goal } = req.body;
+    const creatorId = req.user.id
     try {
-        if( createdRoutines ) {
-            res.send(createdRoutines);
-            next() 
-        }
+        const createdRoutines = await createRoutine({ creatorId, isPublic, name, goal })
+        res.send(createdRoutines);
     } catch (error) {
       next(error)
     }

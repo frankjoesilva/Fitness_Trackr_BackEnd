@@ -13,6 +13,8 @@ const activitiesRouter = require('./activities')
 
 const routinesRouter = require('./routines')
 
+const routineActivityRouter = require('./routine_activities')
+
 
   apiRouter.use(async (req, res, next) => {
     console.log('req', req.body)
@@ -57,6 +59,6 @@ const routinesRouter = require('./routines')
 
   apiRouter.use('/routines', routinesRouter)
 
-
+  apiRouter.use('/routine_activities', routineActivityRouter)
 
 module.exports = apiRouter;
