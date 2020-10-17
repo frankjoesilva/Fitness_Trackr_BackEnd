@@ -45,7 +45,7 @@ async function destroyRoutineActivity(id){
     }
 }
 
-async function getRoutineActivitiesById({id}){
+async function getRoutineActivitiesByRoutine({id}){
     try{
       const {rows} = await client.query(`
       SELECT *
@@ -65,5 +65,5 @@ module.exports = {
     addActivityToRoutine,
     destroyRoutineActivity,
     updateRoutineActivity,
-    getRoutineActivitiesById,
+    getRoutineActivitiesByRoutine,
 }

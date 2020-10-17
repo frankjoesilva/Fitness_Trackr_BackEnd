@@ -25,7 +25,7 @@ server.use((req, res, next) => {
 });
 
 server.get('/api/health', ( req, res ) => {
-    res.send({message: "this server is chillin!"})
+    res.send({message: "Server is Healthy!"})
 });
 
 server.use((error, req, res, next) => {
