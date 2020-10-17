@@ -58,6 +58,18 @@ async function getRoutineActivitiesByRoutine({id}){
     }
   }
 
+  async function getRoutineActivityById(id) {
+    try {
+      const { rows: [routineActivity] } = await client.query(`
+      SELECT *
+      FROM routine_activities
+      WHERE id=$1
+      `, [id]);
+      return routineActivity;
+    } catch (error) {
+      throw error;
+    }
+  }
 
 
 module.exports = {
@@ -66,4 +78,5 @@ module.exports = {
     destroyRoutineActivity,
     updateRoutineActivity,
     getRoutineActivitiesByRoutine,
+    getRoutineActivityById,
 }

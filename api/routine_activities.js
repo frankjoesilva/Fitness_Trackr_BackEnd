@@ -1,29 +1,36 @@
     const express = require('express');
     const routineActivityRouter = express.Router();
-    const { updateRoutineActivity, getRoutineActivitiesByRoutine } = require('../db/routine_activities');
+    const { updateRoutineActivity, getRoutineActivityById } = require('../db/routine_activities');
+    const { getRoutineById, } = require('../db/routines')
     const { requireUser } = require('./utils');
 
-    routineActivityRouter.patch('/:routineActivityId', requireUser, async ( req, res, next ) => {
-        const { routineActivityId } = req.params
-        const { duration, count } = req.body
-        const updateFields = {};
-        try {
-            if (duration) {
-                updateFields.duration = duration
-            }
-            if (count) {
-                updateFields.count = count
-            }
-            // const originalRoutine = await getRoutineActivitiesByRoutine({id});
-            // if(originalRoutine){
-            const updatedRoutine = await updateRoutineActivity({id:routineActivityId, ...req.body});
-            console.log('updatedRoutine', updatedRoutine)
-            res.send(updatedRoutine)
-            // }
-        } catch (error) {
-          next(error)
-        }
-    });
 
+
+    routineActivityRouter.patch('/:routineActivityId', requireUser, async ( req, res, next ) => {
+        const id = req.params.routineActivityId;
+		const userId = req.user.id;
+		const { count, duration } = req.body;
+		try {
+			const routineActivity = await getRoutineActivityById(id);
+			const routineId = routineActivity.routineId;
+			const routine = await getRoutineById(routineId);
+			const creatorId = routine.creatorId;
+			if (creatorId !== userId) {
+				return res.send('This is not your routine');
+			}
+			if (Object.keys(req.body).length === 0) {
+				res.send({ message: 'Missing fields' });
+			} else {
+				const updatedRoutineActivity = await updateRoutineActivity({
+					id,
+					count,
+					duration
+				});
+				res.send(updatedRoutineActivity);
+			}
+		} catch ({ name, message }) {
+			next({ name, message });
+		}
+    });
 
 module.exports = routineActivityRouter
