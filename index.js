@@ -33,7 +33,7 @@ server.use((error, req, res, next) => {
 });
 
 server.get('*', (req, res, next) => {
-  res.status(404).send({message : 'uh Oh!'});
+  res.status(404).send({message : 'Error 404 not found!'});
 });
 
 server.use((error, req, res, next) => {
