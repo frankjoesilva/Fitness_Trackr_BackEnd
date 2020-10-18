@@ -8,7 +8,6 @@ const apiRouter = express.Router();
 
 const usersRouter = require('./users');
 
-
 const activitiesRouter = require('./activities')
 
 const routinesRouter = require('./routines')
@@ -17,7 +16,6 @@ const routineActivityRouter = require('./routine_activities')
 
 
   apiRouter.use(async (req, res, next) => {
-    console.log('req', req.body)
   const prefix = 'Bearer ';
   const auth = req.header('Authorization');
 

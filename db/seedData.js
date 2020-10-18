@@ -1,29 +1,22 @@
-// require in the database adapter functions as you write them (createUser, createActivity...)
-// const { } = require('./');
+
 const {createUser, createActivity, createRoutine, getRoutinesWithoutActivities, getAllActivities, addActivityToRoutine} = require('./')
 const client = require('./client');
 
 async function dropTables() {
   try{
-    console.log('Dropping All Tables...');
-    // drop all tables, in the correct order
     await client.query(`
     DROP TABLE IF EXISTS routine_activities;
     DROP TABLE IF EXISTS routines;
     DROP TABLE IF EXISTS activities;
     DROP TABLE IF EXISTS users;
     `);
-    console.log('Finished dropping tables')
   } catch (error){
-    console.error("Error dropping tables!");
     throw error;
   }
 }
 
 
 async function createTables() {
-  console.log("Starting to build tables...");
-  // create all tables, in the correct order
   try {
     await client.query(`
     CREATE TABLE users(
@@ -52,7 +45,6 @@ async function createTables() {
       UNIQUE ("routineId", "activityId")
     );
   `);
-  console.log('Finished constructing tables!')
   } catch (error) {
     console.error('Error unable create Tables')
     throw error
