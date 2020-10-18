@@ -1,6 +1,6 @@
     const express = require('express');
     const routineActivityRouter = express.Router();
-    const { updateRoutineActivity, getRoutineActivityById } = require('../db/routine_activities');
+    const { updateRoutineActivity, getRoutineActivityById, destroyRoutineActivity } = require('../db/routine_activities');
     const { getRoutineById, } = require('../db/routines')
     const { requireUser } = require('./utils');
 
@@ -31,6 +31,26 @@
 		} catch ({ name, message }) {
 			next({ name, message });
 		}
-    });
+	});
+	
+	routineActivityRouter.delete('/:routineActivityId', requireUser, async (req, res, next) =>{
+		const id = req.params.routineActivityId;
+		const userId = req.user.id;
+		try{
+			const routineActivity = await getRoutineActivityById(id);
+			const routineId = routineActivity.routineId;
+			const routine = await getRoutineById(routineId);
+			const creatorId = routine.creatorId;
+			if (creatorId !== userId) {
+				return res.send('This is not your routine');
+			}
+			else {
+				const deleteRoutineActivity = await destroyRoutineActivity(id)
+				res.send(deleteRoutineActivity);
+			}
+		} catch ({ name, message }) {
+			next({ name, message });
+		}
+	});
 
 module.exports = routineActivityRouter
