@@ -15,11 +15,8 @@ usersRouter.post('/register', async (req, res, next) => {
     if (users) {
       res.send({ message: 'A user by that username already exists' });
     }
-    else if (username.length <= 6) {
-      res.send({ message: 'Username Too Short, Must be longer that 6 characters!' });
-    }
-    else if (password.length <= 8) {
-      res.send({ message: 'Password Too Short, Must be longer that 8 characters!' });
+    else if (username.length <= 6 || password.length <= 8) {
+      res.send({ message: 'Username or Password Too Short, username must be 6 characters or more and password should have a minimum of 8!' });
     }
     else {
 
