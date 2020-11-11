@@ -15,9 +15,13 @@ usersRouter.post('/register', async (req, res, next) => {
     if (users) {
       res.send({ message: 'A user by that username already exists' });
     }
+    else if (username.length <= 6) {
+      res.send({ message: 'Username Too Short, Must be longer that 6 characters!' });
+    }
     else if (password.length <= 8) {
-      res.send({ message: 'Password Too Short!' });
-    } else {
+      res.send({ message: 'Password Too Short, Must be longer that 8 characters!' });
+    }
+    else {
 
       const user = await createUser({ username, password });
       const token = jwt.sign(user, JWT_SECRET);
@@ -32,13 +36,17 @@ usersRouter.post('/register', async (req, res, next) => {
 usersRouter.post('/login', async (req, res, next) => {
   const { username, password } = req.body;
   try {
+    if (!username || !password) {
+      next({ name: 'IncorrectCredentialsError', message: 'Username or password is incorrect' });
+      return
+    }
     const user = await getUser({ username, password });
     if (user) {
       const token = jwt.sign(user, JWT_SECRET);
       res.send({ message: "you're logged in!", token });
       return user;
     } else {
-      return next({ name: 'IncorrectCredentialsError', message: 'Username or password is incorrect' });
+      next({ name: 'IncorrectCredentialsError', message: 'Username or password is incorrect' });
     }
   } catch (error) {
     next(error);

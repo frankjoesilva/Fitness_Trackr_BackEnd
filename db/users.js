@@ -48,9 +48,6 @@ async function getUser({ username, password }) {
       delete user.password
       return user
     }
-    else {
-      return false
-    }
   } catch (error) {
     throw error
   }
