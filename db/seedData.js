@@ -1,16 +1,16 @@
 
-const {createUser, createActivity, createRoutine, getRoutinesWithoutActivities, getAllActivities, addActivityToRoutine} = require('./')
+const { createUser, createActivity, createRoutine, getRoutinesWithoutActivities, getAllActivities, addActivityToRoutine } = require('./')
 const client = require('./client');
 
 async function dropTables() {
-  try{
+  try {
     await client.query(`
     DROP TABLE IF EXISTS routine_activities;
     DROP TABLE IF EXISTS routines;
     DROP TABLE IF EXISTS activities;
     DROP TABLE IF EXISTS users;
     `);
-  } catch (error){
+  } catch (error) {
     throw error;
   }
 }
@@ -106,10 +106,10 @@ async function createInitialRoutines() {
     console.log('starting to create routines...');
 
     const routinesToCreate = [
-      {creatorId: 2, isPublic: false, name: 'Bicep Day', goal: 'Work the Back and Biceps.'},
-      {creatorId: 1, isPublic: true, name: 'Chest Day', goal: 'To beef up the Chest and Triceps!'},
-      {creatorId: 1, isPublic: false, name: 'Leg Day', goal: 'Running, stairs, squats'},
-      {creatorId: 2, isPublic: true, name: 'Cardio Day', goal: 'Running, stairs. Stuff that gets your heart pumping!'},
+      { creatorId: 2, isPublic: false, name: 'Bicep Day', goal: 'Work the Back and Biceps.' },
+      { creatorId: 1, isPublic: true, name: 'Chest Day', goal: 'To beef up the Chest and Triceps!' },
+      { creatorId: 1, isPublic: false, name: 'Leg Day', goal: 'Running, stairs, squats' },
+      { creatorId: 2, isPublic: true, name: 'Cardio Day', goal: 'Running, stairs. Stuff that gets your heart pumping!' },
     ]
     const routines = await Promise.all(routinesToCreate.map(routine => createRoutine(routine)));
     console.log('Routines Created: ', routines)
@@ -130,55 +130,55 @@ async function createInitialRoutineActivities() {
         routineId: bicepRoutine.id,
         activityId: bicep1.id,
         count: 10,
-        duration: 5 
+        duration: 5
       },
       {
         routineId: bicepRoutine.id,
         activityId: bicep2.id,
         count: 10,
-        duration: 8 
+        duration: 8
       },
       {
         routineId: chestRoutine.id,
         activityId: chest1.id,
         count: 10,
-        duration: 8 
+        duration: 8
       },
       {
         routineId: chestRoutine.id,
         activityId: chest2.id,
         count: 10,
-        duration: 7 
+        duration: 7
       },
       {
         routineId: legRoutine.id,
         activityId: leg1.id,
         count: 10,
-        duration: 9 
+        duration: 9
       },
       {
         routineId: legRoutine.id,
         activityId: leg2.id,
         count: 10,
-        duration: 10 
+        duration: 10
       },
       {
         routineId: legRoutine.id,
         activityId: leg3.id,
         count: 10,
-        duration: 7 
+        duration: 7
       },
       {
         routineId: cardioRoutine.id,
         activityId: leg2.id,
         count: 10,
-        duration: 10 
+        duration: 10
       },
       {
         routineId: cardioRoutine.id,
         activityId: leg3.id,
         count: 10,
-        duration: 15 
+        duration: 15
       },
     ]
     const routineActivities = await Promise.all(routineActivitiesToCreate.map(addActivityToRoutine));

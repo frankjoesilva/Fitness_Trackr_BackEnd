@@ -76,13 +76,16 @@ async function destroyRoutine(id) {
   }
 }
 
-async function getActivitiesByRoutineId() {
+async function getActivitiesByRoutineId(id) {
   try {
     const { rows: activities } = await client.query(`
-        SELECT activities.name, routine_activities.duration, routine_activities.count
-        FROM activities, routine_activities
-        WHERE routine_activities."activityId" = activities.id
-        `, );
+
+        SELECT *
+      FROM activities a
+      JOIN (SELECT duration, count, "routineId", "activityId" FROM routine_activities) ra
+      ON ra."activityId" = a.id
+      WHERE "routineId" = $1
+        `, [id]);
     return activities
   } catch (error) {
     throw error;
@@ -129,11 +132,10 @@ async function getAllPublicRoutines() {
 async function getAllRoutinesByUser({ username }) {
   try {
     const { rows: routines } = await client.query(`
-        SELECT users.username AS "creatorName", routines.*
-        FROM users, routines, routine_activities
-        WHERE routine_activities."routineId" = routines.id
-        AND routines."creatorId" = users.id
-        AND users.username = $1
+    SELECT routines.*, users.username AS "creatorName"
+    FROM routines
+    JOIN users ON users.id = routines."creatorId"
+    WHERE users.username = $1
         `, [username])
     const addActivitiesToRoutine = await Promise.all(routines.map(async routine => {
       routine.activities = await getActivitiesByRoutineId(routine.id);

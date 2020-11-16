@@ -4,10 +4,10 @@ const { requireUser } = require('./utils')
 const { createActivity, getAllActivities, updateActivity } = require('../db/activities');
 const { getPublicRoutinesByActivity } = require('../db/routines');
 
-activitiesRouter.get('/', async ( req, res, next ) => {
+activitiesRouter.get('/', async (req, res, next) => {
     try {
         const activities = await getAllActivities()
-        res.send( activities )
+        res.send(activities)
         return activities
     } catch (error) {
         next(error)
@@ -15,40 +15,40 @@ activitiesRouter.get('/', async ( req, res, next ) => {
 })
 
 
-    activitiesRouter.post('/', requireUser, async ( req, res, next ) => {
-        const { name, description } = req.body;
-        try {
-            
-            const createdActivities = await createActivity({name, description})
-            if(createdActivities){
-                res.send(createdActivities);
-                next() 
-            }
-        } catch (error){
-            next(error)
-        }
-    }); 
+activitiesRouter.post('/', requireUser, async (req, res, next) => {
+    const { name, description } = req.body;
+    try {
 
-    activitiesRouter.patch('/:activityId', requireUser, async ( req, res, next ) => {
-        const { activityId } = req.params
-        const { name, description } = req.body;
-        try {
-            const updatedActivity = await updateActivity({ id : activityId, name, description })
-            res.send( updatedActivity )
-        } catch (error) {
-          next(error)
+        const createdActivities = await createActivity({ name, description })
+        if (createdActivities) {
+            res.send(createdActivities);
+            next()
         }
-    });
+    } catch (error) {
+        next(error)
+    }
+});
 
-    
-activitiesRouter.get('/:activityId/routines', async ( req, res, next ) => {
+activitiesRouter.patch('/:activityId', requireUser, async (req, res, next) => {
+    const { activityId } = req.params
+    const { name, description } = req.body;
+    try {
+        const updatedActivity = await updateActivity({ id: activityId, name, description })
+        res.send(updatedActivity)
+    } catch (error) {
+        next(error)
+    }
+});
+
+
+activitiesRouter.get('/:activityId/routines', async (req, res, next) => {
     const { activityId } = req.params;
     try {
         const getPublicRoutine = await getPublicRoutinesByActivity({ activityId })
         res.send(getPublicRoutine)
-    } catch ({name, message}) {
-      next(error)
+    } catch ({ name, message }) {
+        next(error)
     }
 });
 
-    module.exports = activitiesRouter
+module.exports = activitiesRouter
