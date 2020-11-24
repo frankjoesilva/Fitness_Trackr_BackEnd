@@ -80,7 +80,7 @@ async function getActivitiesByRoutineId(id) {
   try {
     const { rows: activities } = await client.query(`
 
-        SELECT *
+      SELECT *
       FROM activities a
       JOIN (SELECT duration, count, "routineId", "activityId" FROM routine_activities) ra
       ON ra."activityId" = a.id
