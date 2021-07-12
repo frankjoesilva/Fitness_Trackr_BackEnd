@@ -1,60 +1,60 @@
 const express = require('express');
 const routinesRouter = express.Router();
 const { getAllPublicRoutines, createRoutine, updateRoutine, destroyRoutine } = require('../db/routines');
-const {addActivityToRoutine} = require('../db/routine_activities');
+const { addActivityToRoutine } = require('../db/routine_activities');
 const { requireUser } = require('./utils');
 
 
 
-routinesRouter.get('/', async ( req, res, next ) => {
+routinesRouter.get('/', async (req, res, next) => {
     try {
         const routines = await getAllPublicRoutines()
-        res.send( routines )
-    } catch (error) { 
+        res.send(routines)
+    } catch (error) {
         next(error)
     }
 })
 
-routinesRouter.post('/', requireUser, async ( req, res, next ) => {
+routinesRouter.post('/', requireUser, async (req, res, next) => {
     const { isPublic, name, goal } = req.body;
     const creatorId = req.user.id
     try {
         const createdRoutines = await createRoutine({ creatorId, isPublic, name, goal })
         res.send(createdRoutines);
     } catch (error) {
-      next(error)
+        next(error)
     }
 });
 
-    routinesRouter.post('/:routineId/activities', async ( req, res, next ) => {
-        const { routineId } = req.params
-        const { activityId, count, duration } = req.body
-        try {
-            const activityToRoutine = await addActivityToRoutine({ routineId, activityId, count, duration })
-            res.send( activityToRoutine )
-        } catch (error) {
-          next(error)
-        }
-    });
-
-    routinesRouter.patch('/:routineId', requireUser, async (req, res, next) => {
-        const { routineId } = req.params
-        try {
-            const updatedRoutine = await updateRoutine({id: routineId, ...req.body})
-            res.send(updatedRoutine)
-        }catch(error){
+routinesRouter.post('/:routineId/activities', async (req, res, next) => {
+    const { routineId } = req.params
+    const { activityId, count, duration } = req.body
+    try {
+        const activityToRoutine = await addActivityToRoutine({ routineId, activityId, count, duration })
+        res.send(activityToRoutine)
+    } catch (error) {
         next(error)
-        }
-    });
+    }
+});
 
-    routinesRouter.delete('/:routineId', requireUser, async (req, res, next) =>{
-        try{
-            const ThrowOutRoutine = await destroyRoutine(req.params.routineId)
-            res.send(ThrowOutRoutine)
-        }catch(error){
+routinesRouter.patch('/:routineId', requireUser, async (req, res, next) => {
+    const { routineId } = req.params
+    try {
+        const updatedRoutine = await updateRoutine({ id: routineId, ...req.body })
+        res.send(updatedRoutine)
+    } catch (error) {
         next(error)
-        }
-    });
+    }
+});
+
+routinesRouter.delete('/:routineId', requireUser, async (req, res, next) => {
+    try {
+        const ThrowOutRoutine = await destroyRoutine(req.params.routineId)
+        res.send(ThrowOutRoutine)
+    } catch (error) {
+        next(error)
+    }
+});
 
 
 

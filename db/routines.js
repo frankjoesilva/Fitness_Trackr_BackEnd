@@ -111,13 +111,19 @@ async function getAllRoutines() {
 
 async function getAllPublicRoutines() {
   try {
+    // const { rows: routines } = await client.query(`
+    //   SELECT DISTINCT users.username AS "creatorName", routines.id, routines."creatorId", routines."isPublic", routines.name, routines.goal
+    //   FROM users, routines, routine_activities
+    //   WHERE routine_activities."routineId" = routines.id
+    //   AND routines."creatorId" = users.id
+    //   AND routines."isPublic" = true
+    //   `)
     const { rows: routines } = await client.query(`
-      SELECT DISTINCT users.username AS "creatorName", routines.id, routines."creatorId", routines."isPublic", routines.name, routines.goal
-      FROM users, routines, routine_activities
-      WHERE routine_activities."routineId" = routines.id
-      AND routines."creatorId" = users.id
-      AND routines."isPublic" = true
-      `)
+    SELECT DISTINCT users.username AS "creatorName", routines.id, routines."creatorId", routines."isPublic", routines.name, routines.goal
+    FROM users, routines, routine_activities
+    WHERE routines."creatorId" = users.id
+    AND routines."isPublic" = true
+    `)
     const addActivitiesToRoutine = await Promise.all(routines.map(async routine => {
       routine.activities = await getActivitiesByRoutineId(routine.id);
       return routine;
