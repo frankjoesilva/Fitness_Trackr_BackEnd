@@ -81,7 +81,7 @@ async function createInitialActivities() {
 
     const activitiesToCreate = [
       { name: 'wide-grip standing barbell curl', description: 'Lift that barbell!' },
-      { name: 'Incline Dumbbell Hammer Curl', description: 'Lie down face up on an incline bench and lift thee barbells slowly upward toward chest' },
+      { name: 'Sit-ups', description: 'Sit-ups' },
       { name: 'bench press', description: 'Lift a safe amount, but push yourself!' },
       { name: 'Push Ups', description: 'Pretty sure you know what to do!' },
       { name: 'squats', description: 'Heavy lifting.' },
