@@ -18,11 +18,6 @@ activitiesRouter.get('/', async (req, res, next) => {
 activitiesRouter.post('/', requireUser, async (req, res, next) => {
     const { name, description } = req.body;
     try {
-        // if (Object.keys(req.body).length === 0) {
-        //     res.send({ message: 'Missing fields' });
-        // }
-
-        // else {
         const createdActivities = await createActivity({
             name,
             description
