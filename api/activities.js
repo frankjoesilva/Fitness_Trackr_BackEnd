@@ -17,14 +17,22 @@ activitiesRouter.get('/', async (req, res, next) => {
 
 activitiesRouter.post('/', requireUser, async (req, res, next) => {
     const { name, description } = req.body;
-    try {
-        const createdActivities = await createActivity({
-            name,
-            description
-        })
-        res.send(createdActivities);
-        next()
 
+    try {
+        if (name === '' || !description === '') {
+            next({
+                name: "MissingCredentialsError",
+                message: "Please supply both a name and description",
+            });
+        }
+        else {
+            const createdActivities = await createActivity({
+                name,
+                description
+            })
+            res.send(createdActivities);
+            next()
+        }
     } catch (error) {
         next(error);
     }
