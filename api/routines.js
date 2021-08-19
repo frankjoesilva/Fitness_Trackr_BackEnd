@@ -1,3 +1,4 @@
+const e = require('express');
 const express = require('express');
 const routinesRouter = express.Router();
 const { getAllPublicRoutines, createRoutine, updateRoutine, destroyRoutine } = require('../db/routines');
@@ -19,8 +20,17 @@ routinesRouter.post('/', requireUser, async (req, res, next) => {
     const { isPublic, name, goal } = req.body;
     const creatorId = req.user.id
     try {
-        const createdRoutines = await createRoutine({ creatorId, isPublic, name, goal })
-        res.send(createdRoutines);
+
+        if (name === '' || goal === '') {
+            next({
+                name: "MissingCredentialsError",
+                message: "Please supply both a name and description",
+            });
+        }
+        else {
+            const createdRoutines = await createRoutine({ creatorId, isPublic, name, goal })
+            res.send(createdRoutines);
+        }
     } catch (error) {
         next(error)
     }
