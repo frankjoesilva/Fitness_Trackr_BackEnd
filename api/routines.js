@@ -36,16 +36,44 @@ routinesRouter.post('/', requireUser, async (req, res, next) => {
     }
 });
 
-routinesRouter.post('/:routineId/activities', async (req, res, next) => {
-    const { routineId } = req.params
-    const { activityId, count, duration } = req.body
+routinesRouter.post('/', requireUser, async (req, res, next) => {
+    const { count, duration } = req.body
+    const { routineId, activityId } = req.user.id
     try {
-        const activityToRoutine = await addActivityToRoutine({ routineId, activityId, count, duration })
-        res.send(activityToRoutine)
+        if (count === '' || duration === '') {
+            next({
+                name: "MissingCredentialsError",
+                message: "Please supply both a name and description",
+            });
+        }
+        else {
+            const activityToRoutine = await addActivityToRoutine({ routineId, activityId, count, duration })
+            res.send(activityToRoutine)
+        }
     } catch (error) {
         next(error)
     }
 });
+
+// routinesRouter.post('/:routineId/activities', async (req, res, next) => {
+//     const { routineId } = req.params
+//     const { activityId, count, duration } = req.body
+//     try {
+//         if (count === '' || duration === '') {
+//             next({
+//                 name: "MissingCredentialsError",
+//                 message: "Please supply both a name and description",
+//             });
+//         }
+//         else {
+//             const activityToRoutine = await addActivityToRoutine({ routineId, activityId, count, duration })
+//             res.send(activityToRoutine)
+//         }
+//     } catch (error) {
+//         next(error)
+//     }
+// });
+
 
 routinesRouter.patch('/:routineId', requireUser, async (req, res, next) => {
     const { routineId } = req.params
