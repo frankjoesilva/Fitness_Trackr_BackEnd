@@ -19,7 +19,7 @@ activitiesRouter.post('/', requireUser, async (req, res, next) => {
     const { name, description } = req.body;
 
     try {
-        if (name === '' || !description === '') {
+        if (name === '' || description === '') {
             next({
                 name: "MissingCredentialsError",
                 message: "Please supply both a name and description",
