@@ -15,7 +15,7 @@ const routinesRouter = require('./routines')
 const routineActivityRouter = require('./routine_activities')
 
 
-  apiRouter.use(async (req, res, next) => {
+apiRouter.use(async (req, res, next) => {
   const prefix = 'Bearer ';
   const auth = req.header('Authorization');
 
@@ -37,26 +37,26 @@ const routineActivityRouter = require('./routine_activities')
   } else {
     next({
       name: 'AuthorizationHeaderError',
-      message: `Authorization token must start with ${ prefix }`
+      message: `Authorization token must start with ${prefix}`
     });
   }
 });
 
 
-  apiRouter.use((req, res, next) => {
-    if (req.user) {
-      console.log("User is set:", req.user);
-    }
-    next();
-  });
+apiRouter.use((req, res, next) => {
+  if (req.user) {
+    console.log("User is set:", req.user);
+  }
+  next();
+});
 
-  
-  apiRouter.use('/users', usersRouter);
 
-  apiRouter.use('/activities', activitiesRouter)
+apiRouter.use('/users', usersRouter);
 
-  apiRouter.use('/routines', routinesRouter)
+apiRouter.use('/activities', activitiesRouter)
 
-  apiRouter.use('/routine_activities', routineActivityRouter)
+apiRouter.use('/routines', routinesRouter)
+
+apiRouter.use('/routine_activities', routineActivityRouter)
 
 module.exports = apiRouter;
